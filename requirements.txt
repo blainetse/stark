@@ -1,0 +1,24 @@
+torch==1.8.1+cu111
+torchvision==0.9.1+cu111
+torchaudio==0.8.1
+-f https://download.pytorch.org/whl/torch_stable.html
+PyYAML
+easydict
+cython
+opencv-python
+pandas
+tqdm
+pycocotools
+jpeg4py
+tb-nightly
+tikzplotlib
+colorama
+lmdb
+scipy
+visdom
+git+https://github.com/votchallenge/vot-toolkit-python
+onnx
+onnxruntime-gpu==1.6.0
+timm==0.3.2
+black
+yacs
