@@ -8,25 +8,49 @@ from lib.models.stark.stark_s import STARKS
 
 
 class STARKST(STARKS):
-    """ This is the base class for Transformer Tracking """
-    def __init__(self, backbone, transformer, box_head, num_queries,
-                 aux_loss=False, head_type="CORNER", cls_head=None):
-        """ Initializes the model.
+    """This is the base class for Transformer Tracking"""
+
+    def __init__(
+        self,
+        backbone,
+        transformer,
+        box_head,
+        num_queries,
+        aux_loss=False,
+        head_type="CORNER",
+        cls_head=None,
+    ):
+        """Initializes the model.
         Parameters:
             backbone: torch module of the backbone to be used. See backbone.py
             transformer: torch module of the transformer architecture. See transformer.py
             num_queries: number of object queries.
             aux_loss: True if auxiliary decoding losses (loss at each decoder layer) are to be used.
         """
-        super().__init__(backbone, transformer, box_head, num_queries,
-                         aux_loss=aux_loss, head_type=head_type)
+        super().__init__(
+            backbone,
+            transformer,
+            box_head,
+            num_queries,
+            aux_loss=aux_loss,
+            head_type=head_type,
+        )
         self.cls_head = cls_head
 
-    def forward(self, img=None, seq_dict=None, mode="backbone", run_box_head=False, run_cls_head=False):
+    def forward(
+        self,
+        img=None,
+        seq_dict=None,
+        mode="backbone",
+        run_box_head=False,
+        run_cls_head=False,
+    ):
         if mode == "backbone":
             return self.forward_backbone(img)
         elif mode == "transformer":
-            return self.forward_transformer(seq_dict, run_box_head=run_box_head, run_cls_head=run_cls_head)
+            return self.forward_transformer(
+                seq_dict, run_box_head=run_box_head, run_cls_head=run_cls_head
+            )
         else:
             raise ValueError
 
@@ -34,10 +58,17 @@ class STARKST(STARKS):
         if self.aux_loss:
             raise ValueError("Deep supervision is not supported.")
         # Forward the transformer encoder and decoder
-        output_embed, enc_mem = self.transformer(seq_dict["feat"], seq_dict["mask"], self.query_embed.weight,
-                                                 seq_dict["pos"], return_encoder_output=True)
+        output_embed, enc_mem = self.transformer(
+            seq_dict["feat"],
+            seq_dict["mask"],
+            self.query_embed.weight,
+            seq_dict["pos"],
+            return_encoder_output=True,
+        )
         # Forward the corner head
-        out, outputs_coord = self.forward_head(output_embed, enc_mem, run_box_head=run_box_head, run_cls_head=run_cls_head)
+        out, outputs_coord = self.forward_head(
+            output_embed, enc_mem, run_box_head=run_box_head, run_cls_head=run_cls_head
+        )
         return out, outputs_coord, output_embed
 
     def forward_head(self, hs, memory, run_box_head=False, run_cls_head=False):
@@ -47,7 +78,7 @@ class STARKST(STARKS):
         out_dict = {}
         if run_cls_head:
             # forward the classification head
-            out_dict.update({'pred_logits': self.cls_head(hs)[-1]})
+            out_dict.update({"pred_logits": self.cls_head(hs)[-1]})
         if run_box_head:
             # forward the box prediction head
             out_dict_box, outputs_coord = self.forward_box_head(hs, memory)
@@ -59,7 +90,9 @@ class STARKST(STARKS):
 
 
 def build_starkst(cfg):
-    backbone = build_backbone(cfg)  # backbone and positional encoding are built together
+    backbone = build_backbone(
+        cfg
+    )  # backbone and positional encoding are built together
     transformer = build_transformer(cfg)
     # BUG TRACE #4: build_box_head, cannot detect GPU, device count 0
     box_head = build_box_head(cfg)
@@ -71,7 +104,7 @@ def build_starkst(cfg):
         num_queries=cfg.MODEL.NUM_OBJECT_QUERIES,
         aux_loss=cfg.TRAIN.DEEP_SUPERVISION,
         head_type=cfg.MODEL.HEAD_TYPE,
-        cls_head=cls_head
+        cls_head=cls_head,
     )
 
     return model

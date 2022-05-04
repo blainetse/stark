@@ -25,6 +25,7 @@ def list_sequences(root, set_ids):
 
     for s in set_ids:
         anno_dir = os.path.join(root, "TRAIN_" + str(s), "anno")
+        print(anno_dir)
 
         sequences_cur_set = [(s, os.path.splitext(f)[0]) for f in os.listdir(anno_dir) if f.endswith('.txt')]
         sequence_list += sequences_cur_set
@@ -53,6 +54,9 @@ class TrackingNet(BaseVideoDataset):
                             sets (0 - 11) will be used.
             data_fraction - Fraction of dataset to be used. The complete dataset is used by default
         """
+        # my add
+        set_ids = [i for i in range(4)]
+        
         root = env_settings().trackingnet_dir if root is None else root
         super().__init__('TrackingNet', root, image_loader)
 

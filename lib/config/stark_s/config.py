@@ -11,14 +11,14 @@ cfg.MODEL = edict()
 cfg.MODEL.HEAD_TYPE = "CORNER"
 cfg.MODEL.HIDDEN_DIM = 256
 cfg.MODEL.NUM_OBJECT_QUERIES = 1
-cfg.MODEL.POSITION_EMBEDDING = 'sine'  # sine or learned
+cfg.MODEL.POSITION_EMBEDDING = "sine"  # sine or learned
 cfg.MODEL.PREDICT_MASK = False
 # MODEL.BACKBONE
 cfg.MODEL.BACKBONE = edict()
 cfg.MODEL.BACKBONE.TYPE = "resnet50"  # resnet50, resnext101_32x8d
 cfg.MODEL.BACKBONE.OUTPUT_LAYERS = ["layer3"]
 cfg.MODEL.BACKBONE.DILATION = False
-# MODEL.TRANSFORMER
+# TODO: MODEL.TRANSFORMER
 cfg.MODEL.TRANSFORMER = edict()
 cfg.MODEL.TRANSFORMER.NHEADS = 8
 cfg.MODEL.TRANSFORMER.DROPOUT = 0.1
@@ -42,7 +42,7 @@ cfg.TRAIN.GIOU_WEIGHT = 2.0
 cfg.TRAIN.L1_WEIGHT = 5.0
 cfg.TRAIN.DEEP_SUPERVISION = False
 cfg.TRAIN.FREEZE_BACKBONE_BN = True
-cfg.TRAIN.FREEZE_LAYERS = ['conv1', 'layer1']
+cfg.TRAIN.FREEZE_LAYERS = ["conv1", "layer1"]
 cfg.TRAIN.PRINT_INTERVAL = 50
 cfg.TRAIN.VAL_EPOCH_INTERVAL = 20
 cfg.TRAIN.GRAD_CLIP_NORM = 0.1
@@ -103,7 +103,7 @@ def _edict2dict(dest_dict, src_edict):
 def gen_config(config_file):
     cfg_dict = {}
     _edict2dict(cfg_dict, cfg)
-    with open(config_file, 'w') as f:
+    with open(config_file, "w") as f:
         yaml.dump(cfg_dict, f, default_flow_style=False)
 
 
@@ -126,5 +126,3 @@ def update_config_from_file(filename):
     with open(filename) as f:
         exp_config = edict(yaml.safe_load(f))
         _update_config(cfg, exp_config)
-
-

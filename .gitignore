@@ -17,3 +17,5 @@ work_dirs/
 checkpoints/
 votlog/
 test/
+.idea/
+tensorboard/

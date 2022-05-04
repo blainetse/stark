@@ -8,3 +8,8 @@ ln -s /data/VOT2020_LT sequences  # 注意：不要添加反斜杠！！！否�
 这里需要注意一点的就是，`config.yaml` 中对应的 `stack = vot2022/lt`，其余年份的为：`stack = votlt2021`
 
 > 其实只有三个长时跟踪数据集：`votlt2018, votlt2019, votlt2020 --> vot2022/lt`，其余年份均引用最新的！
+
+
+## TRAIN
+
+数据集需要：`GOT-10k, coco, TrackingNet(重新指定 set_ids: 0-3), LaSOT`
